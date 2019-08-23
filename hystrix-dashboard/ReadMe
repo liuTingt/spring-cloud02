@@ -1,0 +1,7 @@
+Hystrix Dashboard对实例或者集群实时监控
+访问路径http://hostname:port/hystrix（localhost:2001/hystrix）
+
+对集群的监控需要整合Turbine，对单个服务实例的监控，不需要
+
+
+

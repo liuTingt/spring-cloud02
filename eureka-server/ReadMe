@@ -1,0 +1,4 @@
+1、所有节点即使服务提供方，也是服务消费方，注册中心也不例外
+
+2、使用maven命令package打包，使用命令执行jar包：
+java -jar XXX.jar --spring.profiles.active=peer1

@@ -1,0 +1,16 @@
+Ribbon客户端负载均衡
+
+通过Spring Cloud Ribbon的封装，在微服务架构中使用客户端负载均衡调用只需如下两步：
+1、服务提供者只需要启动多个服务实例并注册到一个注册中心或是多个相关联的服务注册中心。
+2、服务消费者直接通过调用被@LoadBanlanced注解修饰过的RestTemplate来实现面向服务的结构调用。
+
+对于Ribbon的参数配置通常有两种方式：全局配置以及指定客户端配置
+1、全局配置：使用ribbon.<key>=<value>格式进行配置。<key>代表可Ribbon客户端配置的参数名，<value>代表对应参数的值
+例：ribbon.ConnectTimeout=250
+2、客户端配置：<client>.ribbon.<key>=<value>.<key>和<value>含义同全局配置，<client>代表了客户端的名称，如hello-service
+
+
+
+Hystrix
+hystrix命令的实现有两种方式：继承的方式和注解的方式
+

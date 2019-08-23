@@ -1,0 +1,7 @@
+Turbine聚合服务的监控信息，并输出给Hystrix Dashboard进行展示
+
+注意：
+1、起初启动Turbine，界面没有显示监控图像，因为，整合Turbine后默认的连接是/actuator/turbine.stream。所以需要再消费者配置的
+ServletRegistrationBean实例中加上registrationBean.addUrlMappings("/actuator/health","/actuator/hystrix.stream");
+然后访问Turbine项目的监控面板localhost:8989/hystrix和localhost:2001/hystrix都可。监控的对象是Turbine项目，即localhost:8989/turbine.stream
+2、先启动消费者，再启动Turbine

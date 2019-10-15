@@ -13,7 +13,7 @@ public interface HelloService {
 
     // 这里 @RequestParam、@RequestHeader的value属性不能少，否则会报错
     @RequestMapping(value = "/hello4", method = RequestMethod.GET)
-    String hello(@RequestParam("name") String name);
+    String hello(@RequestParam("name") String name) ;
 
     @RequestMapping(value = "/hello5", method = RequestMethod.GET)
     User hello(@RequestHeader("name") String name, @RequestHeader("age") Integer age);

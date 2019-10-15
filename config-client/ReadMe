@@ -1,0 +1,46 @@
+spring cloud config客户端启动端口为什么是7001????????
+
+
+获取远程配置
+    在GIT仓库中，一个形如/{application}-{profile}.properties或{application}-{profile}.yml的配置文件，通过URL请求和客户端配置的访问对应可总结如下：
+        通过向Config Server发送Get请求，以直接的方式获取，可用下面的连接形式
+            不带{label}分支信息,可使用（http://192.168.100.1:7002/didispace-dev.properties）
+                /{application}-{profile}.yml
+                /{application}-{profile}.properties
+            带{label}分支信息,可使用
+                /{label}/{application}-{profile}.yml
+                /{label}/{application}-{profile}.properties
+                /{application}/{profile}/[{label}]
+        通过客户端配置加载的内容如下所示：
+            spring.application.name：对应配置文件{application}内容
+            spring.cloud.config.profile：对应配置文件中{profile}内容
+            spring.cloud.config.label：对应分支内容，如不配置，默认为master
+
+动态刷新配置
+    在config-client做一下修改：
+    1、在config-client的pom文件中添加spring-boot-starter-actuator监控模块，其中包含了/refresh端点的实现
+    2、重新启动config-client，访问一次http://localhost:7001/from1，可以看到当前配置
+    3、修改Git仓库，config-repo/didispace-dev.properties中from的值
+    4、再次访问http://localhost:7001/from1，配置值没有改变
+    5、通过POST请求发送到http://localhost:7001/refresh，可以看到{"from"}内容，代表from参数的配置内容被更新了
+    6、再次访问http://localhost:7001/from1，配置值更新
+GIT提交变化后可以通过GIT的Web Hook功能关联，给配置主机发送/refresh请求实现配置信息的实时更新。但是，系统发展壮大后，维护这样的刷新清单
+也将成为一个非常大的负担，可以通过Spring Cloud Bus实现以消息总线的方式进行配置变更的通知，并完成集群上的批量配置更新
+
+整合Spring Cloud Bus（消息总线）
+    刷新一处应用，该应用的所有实例都是最新状态
+    刷新修改配置：post请求  http://localhost:7003/actuator/bus-refresh
+
+    指定刷新范围
+        Spring Cloud Bus支持刷新微服务中某个服务的单个实例的配置，/bus/refresh接口提供了destination参数，定位要刷新的应用程序，
+        如：http://localhost:7003/actuator/bus-refresh?destination=didispace:7003
+
+        destination参数还可以定位具体的服务，其原理是通过spring的PathMatecher（路径匹配）来实现，如：
+        http://localhost:7003/actuator/bus-refresh?destination=didispace:**。该请求会触发didispace服务的所有实例进行刷新
+
+架构优化
+    之前的架构中，服务的配置更新需要通过具体的服务实例发送请求， 再触发整个服务集群的配置更新。虽然能实现，但是这样的结果是，
+    我们指定的应用实例会不同于集群中的其他应用实例，这样会增加集群内部的复杂度，不利于将来运维工作。因此对架构进行调整，如“第二版Spring Cloud Bus架构”图片所示
+    我们需要做以下改动：
+    1、在Config Server中也引入Spring Cloud Bus，将配置服务端也加入到消息总线中来/
+    2、/bus/refresh请求不在发送到具体服务实例上，而是发送给Config Server，并通过destination参数来指定需要更新配置的服务或实例

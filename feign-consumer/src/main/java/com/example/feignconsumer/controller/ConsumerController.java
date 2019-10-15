@@ -47,14 +47,17 @@ public class ConsumerController {
         return sb.toString();
     }
 
-    @RequestMapping(value = "/feign-consumer3", method = RequestMethod.GET)
-    public String helloConsumer3() {
+   @RequestMapping(value = "/feign-consumer3", method = RequestMethod.GET)
+    public String helloConsumer3() throws Exception {
+        System.out.println("-----------中国-----------------");
         StringBuilder sb = new StringBuilder();
         sb.append(refactorHelloService.hello("DIDI")).append("\n");
         sb.append(refactorHelloService.hello("DIDI", 34)).append("\n");
         sb.append(refactorHelloService.hello(new com.example.helloserviceapi.dto.User("DIDI",33))).append("\n");
         return sb.toString();
     }
+
+
     /*
     *
 

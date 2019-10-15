@@ -6,25 +6,34 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="api-gateway" />
+        <module name="config-client" />
+        <module name="config-server" />
         <module name="eureka-server" />
         <module name="feign-consumer" />
         <module name="hello-service" />
         <module name="hello-service-api" />
         <module name="hystrix-dashboard" />
+        <module name="rabbitmq-hello" />
         <module name="ribbon-consumer" />
         <module name="spring-cloud" />
         <module name="turbine" />
         <module name="turbine-amqp" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="config-client" options="-parameters" />
+      <module name="config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="feign-consumer" options="-parameters" />
       <module name="hello-service" options="-parameters" />
       <module name="hello-service-api" options="-parameters" />
       <module name="hystrix-dashboard" options="-parameters" />
+      <module name="rabbitmq-hello" options="-parameters" />
       <module name="ribbon-consumer" options="-parameters" />
       <module name="turbine" options="-parameters" />
       <module name="turbine-amqp" options="-parameters" />

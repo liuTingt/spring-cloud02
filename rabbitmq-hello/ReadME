@@ -1,0 +1,6 @@
+注意：
+    1、配置文件中的spring.rabbitmq.port=端口号是5672，是服务请求的端口号，不是RabbitMQ请求web的端口号（15672）
+    2、项目启动报错org.springframework.amqp.AmqpIOException: java.io.IOException
+                java.net.SocketException: socket closed
+          原因：创建RabbitMq用户时没有分配权限，到RabbitMQ的web界面给用户设置权限
+          参考链接： https://blog.csdn.net/qq_22638399/article/details/81705606

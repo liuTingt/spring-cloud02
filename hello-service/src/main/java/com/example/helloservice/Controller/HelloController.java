@@ -24,7 +24,7 @@ public class HelloController {
     private Registration registration;// 服务注册
 
     @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public String index() throws InterruptedException {
+    public String index()  throws InterruptedException{
         // client.getLocalserviceInstance()已经过期
         ServiceInstance instance = serviceInstance();
 
@@ -63,5 +63,10 @@ public class HelloController {
     @RequestMapping(value = "/hello3", method = RequestMethod.POST)
     public String hello(@RequestBody User user){
         return "Hello "+ user.getName() + "," +user.getAge();
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test() {
+        return "test";
     }
 }

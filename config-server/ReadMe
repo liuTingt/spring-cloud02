@@ -1,0 +1,41 @@
+Spring Cloud Config分为服务端与客户端两个部分
+其中服务端也称为分布式配置中心，它是一个独立的微服务应用，用来连接配置仓库并为客户端提供获取配置信息、加密/解密信息等访问接口；
+客户端则是微服务架构中的各个微服务用或基础设施
+
+加密解密
+    需要在配置中心安装不限长度的JCE版本，JRE自带的JCE默认使用的是有长度限制的版本。可从orcal官网下载，解压后看到三个文件：README.txt、local_policy.jar、US_export_policy.jar
+    需要将连个jar文件复制到$JAVA_HOME/jre/lib/security目录下，覆盖原来默认内容，加密解密的准备工作完成。
+    相关端点
+        完成JCE的安装后，可启动配置中心，GET请求访问/encrypt/status端点，得到内容说明加密功能不能使用，因为没有加密服务配置对应的密钥，
+    配置密钥
+        可以在encrypt.key属性在配置文件中直接指定密钥信息（对称密钥）。如：encrypt.key=didispace。再重新访问/encrypt/status端点，即可访问。此时配置中心的加密解密功能已可用。
+        可尝试encrypt/和decrypt端点来使用加密和解密的功能。两个都是POST请求。如，以curl命令为例，可通过下面方式调用加密和解密端点
+        $ curl localhost:7002/encrypt -d didispace .....(密码)
+        $ curl localhost:7002/decrypt -d .....(密码) didispace
+        这里通过配置encrypt.key参数指定密钥的方式采用了对称性加密
+    非对称加密
+        通过keytool工具生成密钥对。keytool是JDK中的一个密钥和证书管理工具，他的位置再%JAVA_HOME%\bin\keytool.exe。生成密钥的具体命令如下：
+        // $ keytool -genkeypair -alias "test1" -keyalg "RSA" -keystore "test.keystore"
+        $ keytool -genkeypair -alias "config-server" -keyalg "RSA" -keystore "config-server.keystore"
+        也可以使用-dname来直接指定，创建的密钥有效期默认只有90天，可以使用-validity参数来调整有效期。
+        keytool -genkey -dname "CN=tmp, OU=NC, O=Shanghai University, L=ZB, ST=Shanghai, C=CN" -alias config-server -keyalg RSA -keystore config-server.keystore -keypass 2222 -storepass 1111  -validity 365
+
+        上诉命令会在当前执行目录下生成config-server.keystore文件，然后需要将他保存在配置中心的文件系统中的某个位置，比如放在当前的用户目录下，然后在配置中心加入相关配置信息：
+            encrypt.key-store.location=file://${user.home}/config-server.keystore
+            encrypt.key-store.alias=config-server
+            encrypt.key-store.password=1111
+            encrypt.key-store.secret=2222
+        如果将config-server.keystore文件放在配置中心的src/main/resource目录下，也可以直接这样配置：encrypt.key-store.location=config-server.keystore.
+        另外非对称加密信息也可以通过环境变量的方式进行配置，对应的具体变量名如下：
+            ENCRYPT_KEY_STORE_LOCATION
+            ENCRYPT_KEY_STORE_ALIAS
+            ENCRYPT_KEY_STORE_PASSWORD
+            ENCRYPT_KEY_STORE_SECRET
+            通过环境变量来配置密钥库相关信息可以过的更好的安全性，所以建光敏感的口令信息存储在配置中心的环境变量中是不错的选择。
+
+高可用配置
+    传统模式
+    服务模式
+        将config Server作为一个普通的微服务应用，纳入到Eureka的服务治理体系中。
+
+

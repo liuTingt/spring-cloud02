@@ -1,0 +1,7 @@
+声明式服务调用 Spring Cloud Feign----1
+Feign整合了Spring Cloud Ribbon和Spring Cloud Hystrix，还提供了一种声明式的Web服务客户端定义方式
+Spring Cloud Feign具有可插拔的注解支持
+
+
+该示例来展示Spring Cloud Feign再服务客户端定义上所在来的便利
+使用Feign只需定义服务绑定接口，以声明式的方法，简单的实现服务调用

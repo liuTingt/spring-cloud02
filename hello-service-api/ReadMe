@@ -1,10 +1,11 @@
+声明式服务调用 Spring Cloud Feign---2
 在声明式服务调用Feign中，当使用springMVC注解来绑定服务接口时，我们几乎完全可以从服务方的Controller中依靠复制操作，
 构建出相应的服务客户端绑定接口。这么多的复制操作，Spring Cloud Feign提供了继承特性解决了这些复制操作，减少代码量，本项目
-为了能够服用DTO和接口而定义。
+为了能够复用DTO和接口而定义。
 
 Spring Cloud Feign的继承：
-    构建复用项目，创建公共的接口，即将之前再消费段的接口移到复用项目中，在服务端不必在Controller手写api接口方法，而是Controller继承复用项目的接口，
-    实现其方法即可，不用在方法写注解方法，只需在类上声明@RestController注解即可。在消费端只需必创建接口类并继承服用项目的接口。
+    构建复用项目，创建公共的接口，即将之前在消费端的接口移到复用项目中，在服务端hello-service不必在Controller手写api接口方法，而是Controller继承复用项目的接口，
+    实现其方法即可，不用在方法写注解方法，只需在类上声明@RestController注解即可。在消费端feign-consumer只需创建接口类并继承复用项目的接口。
 
     优点：
         可以将接口的定义从Controller中剥离，同时配合Maven私有仓库可以轻松地实现接口定义的共享，，实现在构建期的就扣绑定，从而有效减少
@@ -12,3 +13,29 @@ Spring Cloud Feign的继承：
     缺点：
         由于接口在构建期间就建立起了依赖，那么接口变动会对项目构建造成影响，可能服务提供方修改了一个接口定义，会直接导致客户端工程的
         构建失败。所以开发期间保持开闭原则。
+
+
+
+
+Spring CLoud Feign的客户端负载均衡是通过Spring Cloud Ribbon实现的，所以可以直接通过配置Ribbon客户端的方式自定义各个服务客户端调用的参数
+
+
+spring boot多模块项目，当一个模块B引用另一个模块A，要将B项目打包，需执行一下步骤
+1、模块A的pom文件的<build><plugins><plugin>     </plugin></plugins></build>中添加
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
+    完整的如下：
+    <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        <classifier>exec</classifier>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </build>
+2、模块A执行maven命令 mvn clean install命令，经模块A打成jar包安装到本地仓库
+2、模块B的pom文件引入模块A的依赖，将模块B打包即可

@@ -8,7 +8,8 @@ import org.springframework.cloud.openfeign.FeignClient;
  * 继承hello-service-api的HelloService接口，添加@FeignClient注解来绑定服务
  */
 
-@FeignClient(value = "hello-service")
+//@FeignClient(value = "hello-service")
+@FeignClient(value = "hello")
 public interface RefactorHelloService extends HelloService {
 
 }

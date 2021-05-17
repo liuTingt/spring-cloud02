@@ -9,6 +9,7 @@
         <module name="api-gateway" />
         <module name="config-client" />
         <module name="config-server" />
+        <module name="demo" />
         <module name="eureka-server" />
         <module name="feign-consumer" />
         <module name="hello-service" />
@@ -17,6 +18,7 @@
         <module name="rabbitmq-hello" />
         <module name="ribbon-consumer" />
         <module name="spring-cloud" />
+        <module name="stream-hello" />
         <module name="turbine" />
         <module name="turbine-amqp" />
       </profile>
@@ -28,6 +30,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="config-client" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="demo" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="feign-consumer" options="-parameters" />
       <module name="hello-service" options="-parameters" />
@@ -35,6 +38,7 @@
       <module name="hystrix-dashboard" options="-parameters" />
       <module name="rabbitmq-hello" options="-parameters" />
       <module name="ribbon-consumer" options="-parameters" />
+      <module name="stream-hello" options="-parameters" />
       <module name="turbine" options="-parameters" />
       <module name="turbine-amqp" options="-parameters" />
     </option>
